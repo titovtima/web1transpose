@@ -3,34 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Транспонировать</title>
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
 
-    <div id="input_line">
-<!--        <span>Аккорд<input id="chord" type="text" size="40"></span>-->
-<!--        <span>Исходная тональность<input id="origin" type="text" size="40"></span>-->
-<!--        <span>Новая тональность<input id="target" type="text" size="40"></span>-->
-        <div>
-            <label for="chord">Аккорд</label><input id="chord" type="text" size="40">
-            Распознано:<span id="chordRead"></span>
+<div id="accidentals">
+    <input id="sharp" type="button" value="&#9839;" class="accidentalButton">
+    <input id="flat" type="button" value="&#9837;" class="accidentalButton">
+</div>
+<div id="notationNotification">
+    Используется английская система обозначений:<br>
+    <span class="chordsWrite">B</span> - си<br>
+    <span class="chordsWrite">B♭</span> - си бемоль
+</div>
+<div>
+    <div id="originBlock" class="column">
+        <div id="originKeyBlock">
+            <label for="origin">Исходная тональность</label>
+            <input id="origin" type="text" size="40" class="chordsWrite">
         </div>
-        <div>
-            <label for="origin">Исходная тональность</label><input id="origin" type="text" size="40">
-            Распознано:<span id="originRead"></span>
-        </div>
-        <div>
-            <label for="target">Новая тональность</label><input id="target" type="text" size="40">
-            Распознано:<span id="targetRead"></span>
+        <div id="originChordsBlock">
+            <label for="chord">Аккорды</label>
+<!--            <input id="chord" type="text" size="40">-->
+            <textarea id="chord" class="chordsWrite"></textarea>
         </div>
     </div>
-    <div id="result"></div>
-    <div id="accidentials">
-        <input id="sharp" type="button" value="&#9839;">
-        <input id="flat" type="button" value="&#9837;">
+    <div id="targetBlock" class="column">
+        <div id="targetKeyBlock">
+            <label for="target">Новая тональность</label>
+            <input id="target" type="text" size="40" class="chordsWrite">
+        </div>
+        <label for="result">Результат:</label>
+        <textarea id="result" readonly class="chordsWrite"></textarea>
+<!--        <div id="result" style="word-wrap: break-word"></div>-->
     </div>
+</div>
+<!--    </div>-->
+<!--    <div id="result"></div>-->
 
-    <script src="kotlin.js"></script>
-    <script src="MusicTheoryJS.js"></script>
-    <script src="main.js"></script>
+<script src="kotlin.js"></script>
+<script src="MusicTheoryJS.js"></script>
+<script src="main.js"></script>
 </body>
 </html>

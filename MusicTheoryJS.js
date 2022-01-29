@@ -18,14 +18,27 @@ if (typeof kotlin === 'undefined') {
   var sortedWith = Kotlin.kotlin.collections.sortedWith_eknfly$;
   var wrapFunction = Kotlin.wrapFunction;
   var Comparator = Kotlin.kotlin.Comparator;
+  var unboxChar = Kotlin.unboxChar;
+  var joinToString = Kotlin.kotlin.collections.joinToString_fmv235$;
+  var plus = Kotlin.kotlin.collections.plus_qloxvw$;
+  var toBoxedChar = Kotlin.toBoxedChar;
+  var last = Kotlin.kotlin.collections.last_2p1efm$;
+  var dropLast = Kotlin.kotlin.collections.dropLast_yzln2o$;
+  var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
+  var iterator = Kotlin.kotlin.text.iterator_gw00vp$;
+  var collectionSizeOrDefault = Kotlin.kotlin.collections.collectionSizeOrDefault_ba2ldo$;
+  var UnsupportedOperationException_init = Kotlin.kotlin.UnsupportedOperationException_init_pdl1vj$;
+  var emptyList = Kotlin.kotlin.collections.emptyList_287e2$;
   var toString = Kotlin.toString;
   var Exception_init = Kotlin.kotlin.Exception_init_pdl1vj$;
   var Exception = Kotlin.kotlin.Exception;
-  var toBoxedChar = Kotlin.toBoxedChar;
-  var unboxChar = Kotlin.unboxChar;
   var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
   BiHashMap.prototype = Object.create(HashMap.prototype);
   BiHashMap.prototype.constructor = BiHashMap;
+  Either$Left.prototype = Object.create(Either.prototype);
+  Either$Left.prototype.constructor = Either$Left;
+  Either$Right.prototype = Object.create(Either.prototype);
+  Either$Right.prototype.constructor = Either$Right;
   NoteException.prototype = Object.create(Exception.prototype);
   NoteException.prototype.constructor = NoteException;
   ChordException.prototype = Object.create(Exception.prototype);
@@ -46,6 +59,12 @@ if (typeof kotlin === 'undefined') {
   }
   function transposeChord_JS(chord, originKey, targetKey) {
     return chord.transpose_gyj958$(originKey, targetKey);
+  }
+  function transposeChordsText_JS(chordsText, originKey, targetKey) {
+    return chordsText.transpose_gyj958$(originKey, targetKey);
+  }
+  function chordsTextFromPlainText_JS(text) {
+    return ChordsText$Companion_getInstance().fromPlainText_61zpoe$(text);
   }
   function BiMap() {
   }
@@ -166,6 +185,199 @@ if (typeof kotlin === 'undefined') {
     $this = $this || Object.create(Chord.prototype);
     Chord_init(Chord$Companion_getInstance().chordFromName_61zpoe$(name), $this);
     return $this;
+  }
+  function ChordsText(list) {
+    ChordsText$Companion_getInstance();
+    this.list = list;
+  }
+  function ChordsText$Companion() {
+    ChordsText$Companion_instance = this;
+  }
+  ChordsText$Companion.prototype.fromPlainText_61zpoe$ = function (text) {
+    var destination = ArrayList_init(text.length);
+    var tmp$;
+    tmp$ = iterator(text);
+    loop_label: while (tmp$.hasNext()) {
+      var item = unboxChar(tmp$.next());
+      var tmp$_0 = destination.add_11rb$;
+      var char = toBoxedChar(item);
+      var transform$result;
+      transform$break: do {
+        switch (unboxChar(char)) {
+          case 35:
+            transform$result = Note$Companion_getInstance().sharp;
+            break transform$break;
+          case 98:
+            transform$result = Note$Companion_getInstance().flat;
+            break transform$break;
+          default:transform$result = char;
+            break transform$break;
+        }
+      }
+       while (false);
+      tmp$_0.call(destination, transform$result);
+    }
+    return ChordsText_init(joinToString(destination, ''));
+  };
+  ChordsText$Companion.$metadata$ = {
+    kind: Kind_OBJECT,
+    simpleName: 'Companion',
+    interfaces: []
+  };
+  var ChordsText$Companion_instance = null;
+  function ChordsText$Companion_getInstance() {
+    if (ChordsText$Companion_instance === null) {
+      new ChordsText$Companion();
+    }return ChordsText$Companion_instance;
+  }
+  ChordsText.prototype.toString = function () {
+    var $receiver = this.list;
+    var destination = ArrayList_init(collectionSizeOrDefault($receiver, 10));
+    var tmp$;
+    tmp$ = $receiver.iterator();
+    while (tmp$.hasNext()) {
+      var item = tmp$.next();
+      var tmp$_0 = destination.add_11rb$;
+      var transform$result;
+      if (Kotlin.isType(item, Either$Left)) {
+        transform$result = item.value.name;
+      } else if (Kotlin.isType(item, Either$Right)) {
+        transform$result = item.value;
+      } else {
+        transform$result = Kotlin.noWhenBranchMatched();
+      }
+      tmp$_0.call(destination, transform$result);
+    }
+    var iterator = destination.iterator();
+    if (!iterator.hasNext())
+      throw UnsupportedOperationException_init("Empty collection can't be reduced.");
+    var accumulator = iterator.next();
+    while (iterator.hasNext()) {
+      accumulator = accumulator + iterator.next();
+    }
+    return accumulator;
+  };
+  ChordsText.prototype.transpose_gyj958$ = function (origin, target) {
+    var $receiver = this.list;
+    var destination = ArrayList_init(collectionSizeOrDefault($receiver, 10));
+    var tmp$;
+    tmp$ = $receiver.iterator();
+    while (tmp$.hasNext()) {
+      var item = tmp$.next();
+      var tmp$_0 = destination.add_11rb$;
+      var transform$result;
+      if (Kotlin.isType(item, Either$Left)) {
+        transform$result = eitherLeft(item.value.transpose_gyj958$(origin, target));
+      } else if (Kotlin.isType(item, Either$Right)) {
+        transform$result = item;
+      } else {
+        transform$result = Kotlin.noWhenBranchMatched();
+      }
+      tmp$_0.call(destination, transform$result);
+    }
+    return new ChordsText(destination);
+  };
+  ChordsText.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'ChordsText',
+    interfaces: []
+  };
+  function ChordsText_init(text, $this) {
+    $this = $this || Object.create(ChordsText.prototype);
+    ChordsText$Companion_getInstance();
+    var tmp$;
+    var restText = text;
+    var resultList = emptyList();
+    while (restText.length > 0) {
+      var tmp$_0 = Chord$Companion_getInstance().chordFromString_61zpoe$(restText);
+      var chord = tmp$_0.component1()
+      , newRestText = tmp$_0.component2();
+      if (chord != null) {
+        resultList = plus(resultList, eitherLeft(chord));
+        restText = newRestText;
+      } else {
+        if (resultList.isEmpty())
+          tmp$ = plus(resultList, eitherRight(String.fromCharCode(restText.charCodeAt(0))));
+        else {
+          var last_0 = last(resultList);
+          if (Kotlin.isType(last_0, Either$Left))
+            tmp$ = plus(resultList, eitherRight(String.fromCharCode(restText.charCodeAt(0))));
+          else if (Kotlin.isType(last_0, Either$Right))
+            tmp$ = plus(dropLast(resultList, 1), eitherRight(last_0.value + String.fromCharCode(toBoxedChar(restText.charCodeAt(0)))));
+          else
+            tmp$ = Kotlin.noWhenBranchMatched();
+        }
+        resultList = tmp$;
+        restText = restText.substring(1);
+      }
+    }
+    ChordsText.call($this, resultList);
+    return $this;
+  }
+  function Either() {
+  }
+  function Either$Left(value) {
+    Either.call(this);
+    this.value = value;
+  }
+  Either$Left.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'Left',
+    interfaces: [Either]
+  };
+  Either$Left.prototype.component1 = function () {
+    return this.value;
+  };
+  Either$Left.prototype.copy_11rb$ = function (value) {
+    return new Either$Left(value === void 0 ? this.value : value);
+  };
+  Either$Left.prototype.toString = function () {
+    return 'Left(value=' + Kotlin.toString(this.value) + ')';
+  };
+  Either$Left.prototype.hashCode = function () {
+    var result = 0;
+    result = result * 31 + Kotlin.hashCode(this.value) | 0;
+    return result;
+  };
+  Either$Left.prototype.equals = function (other) {
+    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && Kotlin.equals(this.value, other.value))));
+  };
+  function Either$Right(value) {
+    Either.call(this);
+    this.value = value;
+  }
+  Either$Right.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'Right',
+    interfaces: [Either]
+  };
+  Either$Right.prototype.component1 = function () {
+    return this.value;
+  };
+  Either$Right.prototype.copy_11rc$ = function (value) {
+    return new Either$Right(value === void 0 ? this.value : value);
+  };
+  Either$Right.prototype.toString = function () {
+    return 'Right(value=' + Kotlin.toString(this.value) + ')';
+  };
+  Either$Right.prototype.hashCode = function () {
+    var result = 0;
+    result = result * 31 + Kotlin.hashCode(this.value) | 0;
+    return result;
+  };
+  Either$Right.prototype.equals = function (other) {
+    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && Kotlin.equals(this.value, other.value))));
+  };
+  Either.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'Either',
+    interfaces: []
+  };
+  function eitherLeft($receiver) {
+    return new Either$Left($receiver);
+  }
+  function eitherRight($receiver) {
+    return new Either$Right($receiver);
   }
   function NoteException(noteId, natural, noteName, message) {
     if (noteId === void 0)
@@ -430,6 +642,8 @@ if (typeof kotlin === 'undefined') {
   _.chordFromString = chordFromString_JS;
   _.keyFromString = keyFromString_JS;
   _.transposeChord = transposeChord_JS;
+  _.transposeChordsText = transposeChordsText_JS;
+  _.chordsTextFromPlainText = chordsTextFromPlainText_JS;
   var package$titovtima = _.titovtima || (_.titovtima = {});
   var package$musicTheory = package$titovtima.musicTheory || (package$titovtima.musicTheory = {});
   package$musicTheory.BiMap = BiMap;
@@ -440,6 +654,16 @@ if (typeof kotlin === 'undefined') {
   package$musicTheory.Chord_init_2g26u1$ = Chord_init;
   package$musicTheory.Chord_init_61zpoe$ = Chord_init_0;
   package$musicTheory.Chord = Chord;
+  Object.defineProperty(ChordsText, 'Companion', {
+    get: ChordsText$Companion_getInstance
+  });
+  package$musicTheory.ChordsText_init_61zpoe$ = ChordsText_init;
+  package$musicTheory.ChordsText = ChordsText;
+  Either.Left = Either$Left;
+  Either.Right = Either$Right;
+  package$musicTheory.Either = Either;
+  package$musicTheory.eitherLeft_eoe559$ = eitherLeft;
+  package$musicTheory.eitherRight_eoe559$ = eitherRight;
   package$musicTheory.NoteException = NoteException;
   package$musicTheory.ChordException = ChordException;
   package$musicTheory.KeyException = KeyException;

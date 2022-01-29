@@ -8,60 +8,56 @@ let origin = document.querySelector("#origin")
 let target = document.querySelector("#target")
 let result = document.querySelector("#result")
 
-let chord = null
+let chordsInputText = null
 let originKey = null
 let targetKey = null
 
 function updateResult() {
-    chord = MusicTheoryJS.chordFromString(chordInput.value).first
+    // chordsText = MusicTheoryJS.chordFromString(chordInput.value).first
+    chordsInputText = chordInput.value
     originKey = MusicTheoryJS.keyFromString(origin.value).first
     targetKey = MusicTheoryJS.keyFromString(target.value).first
     // console.log(chord, originKey, targetKey);
-    if (chord === null || originKey === null || targetKey === null || originKey.mode !== targetKey.mode)
+    if (chordsInputText === null || chordsInputText === ""
+        || originKey === null || targetKey === null || originKey.mode !== targetKey.mode)
         result.textContent = "Введите данные"
     else {
-        // try {
-            let transposed = MusicTheoryJS.transposeChord(chord, originKey, targetKey)
-            result.textContent = transposed.name
-        // } catch (e) {
-        //     alert(e.message)
-        //     result.textContent = "Ошибка"
-        // }
+        try {
+            let chordsText = MusicTheoryJS.chordsTextFromPlainText(chordsInputText)
+            let saveSelection = chordInput.selectionStart
+            chordInput.value = chordsText
+            chordInput.selectionStart = saveSelection
+            let resultChordsText = MusicTheoryJS.transposeChordsText(chordsText, originKey, targetKey)
+            result.textContent = resultChordsText
+        } catch (e) {
+            // alert(e.message)
+            console.log(e)
+            result.textContent = "Ошибка"
+        }
     }
+    chordInput.style.height = "0"
+    chordInput.style.height = chordInput.scrollHeight + "px"
+    result.style.height = "0"
+    result.style.height = result.scrollHeight + "px"
 }
 
 updateResult()
 
-let chordRead = document.querySelector("#chordRead")
-let originRead = document.querySelector("#originRead")
-let targetRead = document.querySelector("#targetRead")
-
 chordInput.oninput = function () {
     updateResult()
-    if (chord === null)
-        chordRead.textContent = ""
-    else
-        chordRead.textContent = chord.name
 }
 origin.oninput = function () {
     updateResult()
-    if (originKey === null)
-        originRead.textContent = ""
-    else
-        originRead.textContent = originKey.name
 }
 target.oninput = function () {
     updateResult()
-    if (targetKey === null)
-        targetRead.textContent = ""
-    else
-        targetRead.textContent = targetKey.name
 }
 
 let sharpButton = document.querySelector("#sharp")
 let flatButton = document.querySelector("#flat")
 
 let lastActive = null
+let position = null
 
 document.onselectionchange = function () {
     let active = document.activeElement;
@@ -82,7 +78,10 @@ target.onfocus = focusInput(target)
 
 sharpButton.onclick = function () {
     if (lastActive !== null) {
-        lastActive.value += sharp
+        // lastActive.value += sharp
+        lastActive.setRangeText(sharp)
+        lastActive.selectionEnd = lastActive.selectionStart + 1
+        lastActive.selectionStart = lastActive.selectionEnd
         lastActive.oninput()
         lastActive.focus()
     }
@@ -90,7 +89,10 @@ sharpButton.onclick = function () {
 
 flatButton.onclick = function () {
     if (lastActive !== null) {
-        lastActive.value += flat
+        // lastActive.value += flat
+        lastActive.setRangeText(flat)
+        lastActive.selectionEnd = lastActive.selectionStart + 1
+        lastActive.selectionStart = lastActive.selectionEnd
         lastActive.oninput()
         lastActive.focus()
     }
