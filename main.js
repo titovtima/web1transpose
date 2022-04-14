@@ -8,27 +8,34 @@ let origin = document.querySelector("#origin")
 let target = document.querySelector("#target")
 let result = document.querySelector("#result")
 
-let chordsInputText = null
 let originKey = null
 let targetKey = null
 
 function updateResult() {
-    // chordsText = MusicTheoryJS.chordFromString(chordInput.value).first
-    chordsInputText = chordInput.value
-    originKey = MusicTheoryJS.keyFromString(origin.value).first
-    targetKey = MusicTheoryJS.keyFromString(target.value).first
-    // console.log(chord, originKey, targetKey);
-    if (chordsInputText === null || chordsInputText === ""
-        || originKey === null || targetKey === null || originKey.mode !== targetKey.mode)
+    let chordsInputText = chordInput.value
+    let originMusicText = MusicTheoryJS.musicTextFromPlainText(origin.value)
+    originKey = MusicTheoryJS.keyFromString(originMusicText).first
+    origin.value = originMusicText
+    let targetMusicText = MusicTheoryJS.musicTextFromPlainText(target.value)
+    targetKey = MusicTheoryJS.keyFromString(targetMusicText).first
+    target.value = targetMusicText
+
+    let saveSelection = chordInput.selectionStart
+    let chords = MusicTheoryJS.chordsTextFromPlainText(chordsInputText)
+    chordInput.value = chords.toString()
+    chordInput.selectionStart = saveSelection
+    chordInput.selectionEnd = saveSelection
+
+    // if (originKey !== null)
+    //     origin.value = originKey.name
+    // if (targetKey !== null)
+    //     target.value = targetKey.name
+
+    if (chordsInputText === "" || originKey === null || targetKey === null || originKey.mode !== targetKey.mode)
         result.textContent = "Введите данные"
     else {
         try {
-            let chordsText = MusicTheoryJS.chordsTextFromPlainText(chordsInputText)
-            let saveSelection = chordInput.selectionStart
-            chordInput.value = chordsText
-            chordInput.selectionStart = saveSelection
-            let resultChordsText = MusicTheoryJS.transposeChordsText(chordsText, originKey, targetKey)
-            result.textContent = resultChordsText
+            result.textContent = MusicTheoryJS.transposeChordsText(chords, originKey, targetKey)
         } catch (e) {
             // alert(e.message)
             console.log(e)
@@ -36,9 +43,9 @@ function updateResult() {
         }
     }
     chordInput.style.height = "0"
-    chordInput.style.height = chordInput.scrollHeight + "px"
+    chordInput.style.height = chordInput.scrollHeight + 5 + "px"
     result.style.height = "0"
-    result.style.height = result.scrollHeight + "px"
+    result.style.height = result.scrollHeight + 5 + "px"
 }
 
 updateResult()

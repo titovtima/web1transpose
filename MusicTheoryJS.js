@@ -18,21 +18,21 @@ if (typeof kotlin === 'undefined') {
   var sortedWith = Kotlin.kotlin.collections.sortedWith_eknfly$;
   var wrapFunction = Kotlin.wrapFunction;
   var Comparator = Kotlin.kotlin.Comparator;
-  var unboxChar = Kotlin.unboxChar;
-  var joinToString = Kotlin.kotlin.collections.joinToString_fmv235$;
   var plus = Kotlin.kotlin.collections.plus_qloxvw$;
   var toBoxedChar = Kotlin.toBoxedChar;
   var last = Kotlin.kotlin.collections.last_2p1efm$;
   var dropLast = Kotlin.kotlin.collections.dropLast_yzln2o$;
-  var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
-  var iterator = Kotlin.kotlin.text.iterator_gw00vp$;
   var collectionSizeOrDefault = Kotlin.kotlin.collections.collectionSizeOrDefault_ba2ldo$;
+  var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
   var UnsupportedOperationException_init = Kotlin.kotlin.UnsupportedOperationException_init_pdl1vj$;
   var emptyList = Kotlin.kotlin.collections.emptyList_287e2$;
   var toString = Kotlin.toString;
   var Exception_init = Kotlin.kotlin.Exception_init_pdl1vj$;
   var Exception = Kotlin.kotlin.Exception;
+  var unboxChar = Kotlin.unboxChar;
   var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
+  var joinToString = Kotlin.kotlin.collections.joinToString_fmv235$;
+  var iterator = Kotlin.kotlin.text.iterator_gw00vp$;
   BiHashMap.prototype = Object.create(HashMap.prototype);
   BiHashMap.prototype.constructor = BiHashMap;
   Either$Left.prototype = Object.create(Either.prototype);
@@ -62,6 +62,9 @@ if (typeof kotlin === 'undefined') {
   }
   function transposeChordsText_JS(chordsText, originKey, targetKey) {
     return chordsText.transpose_gyj958$(originKey, targetKey);
+  }
+  function musicTextFromPlainText_JS(text) {
+    return PlainTextAPI$Companion_getInstance().musicTextFromPlainText_61zpoe$(text);
   }
   function chordsTextFromPlainText_JS(text) {
     return ChordsText$Companion_getInstance().fromPlainText_61zpoe$(text);
@@ -194,30 +197,7 @@ if (typeof kotlin === 'undefined') {
     ChordsText$Companion_instance = this;
   }
   ChordsText$Companion.prototype.fromPlainText_61zpoe$ = function (text) {
-    var destination = ArrayList_init(text.length);
-    var tmp$;
-    tmp$ = iterator(text);
-    loop_label: while (tmp$.hasNext()) {
-      var item = unboxChar(tmp$.next());
-      var tmp$_0 = destination.add_11rb$;
-      var char = toBoxedChar(item);
-      var transform$result;
-      transform$break: do {
-        switch (unboxChar(char)) {
-          case 35:
-            transform$result = Note$Companion_getInstance().sharp;
-            break transform$break;
-          case 98:
-            transform$result = Note$Companion_getInstance().flat;
-            break transform$break;
-          default:transform$result = char;
-            break transform$break;
-        }
-      }
-       while (false);
-      tmp$_0.call(destination, transform$result);
-    }
-    return ChordsText_init(joinToString(destination, ''));
+    return ChordsText_init(PlainTextAPI$Companion_getInstance().musicTextFromPlainText_61zpoe$(text));
   };
   ChordsText$Companion.$metadata$ = {
     kind: Kind_OBJECT,
@@ -311,6 +291,8 @@ if (typeof kotlin === 'undefined') {
         restText = restText.substring(1);
       }
     }
+    if (resultList.isEmpty())
+      resultList = plus(resultList, eitherRight(''));
     ChordsText.call($this, resultList);
     return $this;
   }
@@ -637,12 +619,109 @@ if (typeof kotlin === 'undefined') {
     Note_init(Note$Companion_getInstance().noteFromName_61zpoe$(name), $this);
     return $this;
   }
+  function PlainTextAPI() {
+    PlainTextAPI$Companion_getInstance();
+  }
+  function PlainTextAPI$Companion() {
+    PlainTextAPI$Companion_instance = this;
+  }
+  PlainTextAPI$Companion.prototype.musicTextFromPlainText_61zpoe$ = function (text) {
+    return this.sharpFromGridSymbol_61zpoe$(this.flatFromSmallB_61zpoe$(text));
+  };
+  PlainTextAPI$Companion.prototype.cyrillicLettersToLatin_61zpoe$ = function (text) {
+    var destination = ArrayList_init(text.length);
+    var tmp$;
+    tmp$ = iterator(text);
+    loop_label: while (tmp$.hasNext()) {
+      var item = unboxChar(tmp$.next());
+      var tmp$_0 = destination.add_11rb$;
+      var char = toBoxedChar(item);
+      var transform$result;
+      transform$break: do {
+        switch (unboxChar(char)) {
+          case 1040:
+            transform$result = toBoxedChar(65);
+            break transform$break;
+          case 1042:
+            transform$result = toBoxedChar(66);
+            break transform$break;
+          case 1057:
+            transform$result = toBoxedChar(67);
+            break transform$break;
+          case 1045:
+            transform$result = toBoxedChar(69);
+            break transform$break;
+          case 1053:
+            transform$result = toBoxedChar(72);
+            break transform$break;
+          default:transform$result = char;
+            break transform$break;
+        }
+      }
+       while (false);
+      tmp$_0.call(destination, transform$result);
+    }
+    return joinToString(destination, '');
+  };
+  PlainTextAPI$Companion.prototype.sharpFromGridSymbol_61zpoe$ = function (text) {
+    var destination = ArrayList_init(text.length);
+    var tmp$;
+    tmp$ = iterator(text);
+    while (tmp$.hasNext()) {
+      var item = unboxChar(tmp$.next());
+      var tmp$_0 = destination.add_11rb$;
+      var char = toBoxedChar(item);
+      var transform$result;
+      if (unboxChar(char) === 35) {
+        transform$result = Note$Companion_getInstance().sharp;
+      } else {
+        transform$result = char;
+      }
+      tmp$_0.call(destination, transform$result);
+    }
+    return joinToString(destination, '');
+  };
+  PlainTextAPI$Companion.prototype.flatFromSmallB_61zpoe$ = function (text) {
+    var destination = ArrayList_init(text.length);
+    var tmp$;
+    tmp$ = iterator(text);
+    while (tmp$.hasNext()) {
+      var item = unboxChar(tmp$.next());
+      var tmp$_0 = destination.add_11rb$;
+      var char = toBoxedChar(item);
+      var transform$result;
+      if (unboxChar(char) === 98) {
+        transform$result = Note$Companion_getInstance().flat;
+      } else {
+        transform$result = char;
+      }
+      tmp$_0.call(destination, transform$result);
+    }
+    return joinToString(destination, '');
+  };
+  PlainTextAPI$Companion.$metadata$ = {
+    kind: Kind_OBJECT,
+    simpleName: 'Companion',
+    interfaces: []
+  };
+  var PlainTextAPI$Companion_instance = null;
+  function PlainTextAPI$Companion_getInstance() {
+    if (PlainTextAPI$Companion_instance === null) {
+      new PlainTextAPI$Companion();
+    }return PlainTextAPI$Companion_instance;
+  }
+  PlainTextAPI.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'PlainTextAPI',
+    interfaces: []
+  };
   _.chordFromName = chordFromName_JS;
   _.keyFromName = keyFromName_JS;
   _.chordFromString = chordFromString_JS;
   _.keyFromString = keyFromString_JS;
   _.transposeChord = transposeChord_JS;
   _.transposeChordsText = transposeChordsText_JS;
+  _.musicTextFromPlainText = musicTextFromPlainText_JS;
   _.chordsTextFromPlainText = chordsTextFromPlainText_JS;
   var package$titovtima = _.titovtima || (_.titovtima = {});
   var package$musicTheory = package$titovtima.musicTheory || (package$titovtima.musicTheory = {});
@@ -679,6 +758,10 @@ if (typeof kotlin === 'undefined') {
   package$musicTheory.Note_init_4o0j9x$ = Note_init;
   package$musicTheory.Note_init_61zpoe$ = Note_init_0;
   package$musicTheory.Note = Note;
+  Object.defineProperty(PlainTextAPI, 'Companion', {
+    get: PlainTextAPI$Companion_getInstance
+  });
+  package$musicTheory.PlainTextAPI = PlainTextAPI;
   Kotlin.defineModule('MusicTheoryJS', _);
   return _;
 }(typeof MusicTheoryJS === 'undefined' ? {} : MusicTheoryJS, kotlin);

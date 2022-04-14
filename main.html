@@ -13,28 +13,28 @@
 </div>
 <div id="notationNotification">
     Используется английская система обозначений:<br>
-    <span class="chordsWrite">B</span> - си<br>
-    <span class="chordsWrite">B♭</span> - си бемоль
+    <span class="chordsText">B</span> - си<br>
+    <span class="chordsText">B♭</span> - си бемоль
 </div>
 <div>
     <div id="originBlock" class="column">
         <div id="originKeyBlock">
             <label for="origin">Исходная тональность</label>
-            <input id="origin" type="text" size="40" class="chordsWrite">
+            <input id="origin" type="text" size="40" class="chordsText">
         </div>
         <div id="originChordsBlock">
             <label for="chord">Аккорды</label>
 <!--            <input id="chord" type="text" size="40">-->
-            <textarea id="chord" class="chordsWrite"></textarea>
+            <textarea id="chord" contenteditable="true" class="chordsText, chordsBox"></textarea>
         </div>
     </div>
     <div id="targetBlock" class="column">
         <div id="targetKeyBlock">
             <label for="target">Новая тональность</label>
-            <input id="target" type="text" size="40" class="chordsWrite">
+            <input id="target" type="text" size="40" class="chordsText">
         </div>
         <label for="result">Результат:</label>
-        <textarea id="result" readonly class="chordsWrite"></textarea>
+        <pre id="result" class="chordsText, chordsBox"></pre>
 <!--        <div id="result" style="word-wrap: break-word"></div>-->
     </div>
 </div>
